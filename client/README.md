@@ -1,16 +1,91 @@
-# React + Vite
+# SpeakUp
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+SpeakUp is an AI-powered speaking practice platform designed to help users improve confidence and communication skills through guided speaking exercises, speech recording, personalized feedback, and progress tracking.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Completed
 
-## React Compiler
+* React + Vite setup
+* Tailwind CSS integration
+* Landing page
+* Navigation bar
+* Features section
+* How It Works section
+* Call-to-Action section
+* Footer
+* Toast notifications
+* Reusable confirmation dialog
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### In Progress
 
-## Expanding the ESLint configuration
+* Practice Session Page
+* Prompt Generator
+* Audio Recorder
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Planned
+
+* Speech-to-Text transcription
+* AI-generated feedback
+* Progress analytics dashboard
+* User authentication
+* Session history
+* Performance tracking
+
+## Tech Stack
+
+### Frontend
+
+* React
+* Vite
+* Tailwind CSS
+
+### Backend
+
+* Node.js
+* Express.js
+
+### Database
+
+* PostgreSQL
+* Supabase
+
+### AI Services
+
+* OpenAI API
+* Whisper API
+
+## Project Structure
+
+```txt
+client/
+server/
+
+src/
+├── components/
+├── pages/
+├── routes/
+├── services/
+├── hooks/
+├── utils/
+└── data/
+```
+
+## MVP v0.1 Goals
+
+* Landing page
+* Practice Session Page
+* Prompt Generator
+* Audio Recorder
+
+Users should be able to:
+
+1. Open the application
+2. Select a speaking category
+3. Generate a prompt
+4. Record a response
+5. Save the session
+
+## Author
+
+Christie Jude Tarre
