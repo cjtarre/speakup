@@ -1,7 +1,13 @@
 import LandingPage from "./pages/LandingPage";
+import PracticePage from "./pages/PracticePage";
 
 function App() {
-  return <LandingPage />;
+  return (
+    <>
+      <LandingPage />
+      <PracticePage />
+    </>
+  );
 }
 
 export default App;
