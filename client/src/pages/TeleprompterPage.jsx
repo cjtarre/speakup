@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Play,
   Pause,
@@ -24,14 +24,17 @@ function Teleprompter() {
     return script.trim().split(/\s+/).filter(Boolean);
   }, [script]);
 
-  function getWordDelay(word) {
-    const baseDelay = 60000 / wordsPerMinute;
+  const getWordDelay = useCallback(
+    (word) => {
+      const baseDelay = 60000 / wordsPerMinute;
 
-    if (/[.!?]$/.test(word)) return baseDelay * 2.2;
-    if (/[,;:]$/.test(word)) return baseDelay * 1.5;
+      if (/[.!?]$/.test(word)) return baseDelay * 2.2;
+      if (/[,;:]$/.test(word)) return baseDelay * 1.5;
 
-    return baseDelay;
-  }
+      return baseDelay;
+    },
+    [wordsPerMinute]
+  );
 
   useEffect(() => {
     if (!isPlaying || !scrollRef.current || words.length === 0) return;
@@ -40,7 +43,9 @@ function Teleprompter() {
     const delay = getWordDelay(currentWord);
 
     const timeoutId = setTimeout(() => {
-      scrollRef.current.scrollTop += wordsPerMinute / 70;
+      if (scrollRef.current) {
+        scrollRef.current.scrollTop += wordsPerMinute / 70;
+      }
 
       if (highlightEnabled) {
         setActiveWordIndex((prev) => {
@@ -51,7 +56,7 @@ function Teleprompter() {
 
           return prev + 1;
         });
-      } else {
+      } else if (scrollRef.current) {
         scrollRef.current.scrollTop += wordsPerMinute / 40;
       }
     }, delay);
@@ -63,6 +68,7 @@ function Teleprompter() {
     words,
     wordsPerMinute,
     highlightEnabled,
+    getWordDelay,
   ]);
 
   function resetTeleprompter() {
@@ -82,13 +88,23 @@ function Teleprompter() {
 
     setScript(randomScript.text);
     setScriptTitle(`${randomScript.title} • ${randomScript.category}`);
-    resetTeleprompter();
+    setIsPlaying(false);
+    setActiveWordIndex(0);
+
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
+    }
   }
 
   function handleScriptChange(e) {
     setScript(e.target.value);
     setScriptTitle(e.target.value.trim() ? "Custom Script" : "");
-    resetTeleprompter();
+    setIsPlaying(false);
+    setActiveWordIndex(0);
+
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
+    }
   }
 
   function renderHighlightedScript() {
@@ -215,8 +231,8 @@ function Teleprompter() {
             </div>
 
             <p className="mt-3 text-sm text-slate-500">
-              The teleprompter now adds short pauses after commas and longer
-              pauses after full stops.
+              The teleprompter adds short pauses after commas and longer pauses
+              after full stops.
             </p>
           </div>
 
