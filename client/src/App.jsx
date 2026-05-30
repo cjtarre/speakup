@@ -1,12 +1,11 @@
-import LandingPage from "./pages/LandingPage";
-import PracticePage from "./pages/PracticePage";
+import { BrowserRouter } from "react-router-dom";
+import AppRoutes from "./routes/AppRoutes";
 
 function App() {
   return (
-    <>
-      <LandingPage />
-      <PracticePage />
-    </>
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
   );
 }
 

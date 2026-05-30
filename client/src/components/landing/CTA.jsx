@@ -1,4 +1,7 @@
+import { Link } from "react-router-dom";
+
 import Button from "../ui/Button";
+
 
 function CTA() {
   return (
@@ -17,9 +20,11 @@ function CTA() {
         </p>
 
         <div className="mt-8">
-          <Button variant="secondary">
-            Start Practicing
-          </Button>
+          <Link to="/practice">
+            <Button variant="secondary">
+              Start Practicing
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 import Button from "../ui/Button";
 
 function Hero() {
@@ -19,9 +21,13 @@ function Hero() {
         </p>
 
         <div className="mt-8 flex gap-4">
-          <Button>Start Practicing</Button>
+          <Link to="/practice">
+            <Button>Start Practicing</Button>
+          </Link>
 
-          <Button variant="secondary">Learn More</Button>
+          <Link to="/learn-more">
+            <Button variant="secondary">Learn More</Button>
+          </Link>
         </div>
       </div>
     </section>
