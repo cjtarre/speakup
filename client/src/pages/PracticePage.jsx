@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { prompts } from "../data/prompts";
 
+import Recorder from "../components/practice/Recorder";
+
 function PracticePage() {
   const [category, setCategory] = useState("daily");
   const [currentPrompt, setCurrentPrompt] = useState("");
@@ -56,6 +58,8 @@ function PracticePage() {
           {currentPrompt || "Your prompt will appear here."}
         </div>
       </div>
+
+      <Recorder />
     </div>
   );
 }
