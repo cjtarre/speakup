@@ -1,14 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  Play,
-  Pause,
-  RotateCcw,
-  Shuffle,
-  Highlighter,
-  Gauge,
-} from "lucide-react";
+import { Play, Pause, RotateCcw, Shuffle, Highlighter, Gauge,} from "lucide-react";
+import { toast } from "sonner";
 
 import { teleprompterScripts } from "../data/teleprompterScripts";
+import { saveSession } from "../utils/sessionStorage";
 
 function Teleprompter() {
   const scrollRef = useRef(null);
@@ -152,6 +147,21 @@ function Teleprompter() {
     });
   }
 
+  function saveTeleprompterSession() {
+    if (!script.trim()) return;
+
+    saveSession({
+      type: "teleprompter",
+      category: "teleprompter",
+      prompt: scriptTitle || "Custom Teleprompter Script",
+      durationSeconds: 0,
+      scriptText: script,
+      wordsPerMinute,
+    });
+
+    toast.success("Teleprompter session saved.");
+  }
+
   return (
     <div className="rounded-3xl border border-white/70 bg-white/60 p-6 shadow-xl shadow-emerald-900/5 backdrop-blur-xl md:p-8">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
@@ -278,6 +288,14 @@ function Teleprompter() {
             >
               <RotateCcw size={18} />
               Reset
+            </button>
+
+            <button
+              onClick={saveTeleprompterSession}
+              disabled={!script.trim()}
+              className="inline-flex items-center gap-2 rounded-2xl border border-emerald-200 bg-white/70 px-5 py-3 font-semibold text-slate-700 shadow-sm transition hover:bg-white disabled:cursor-not-allowed disabled:bg-slate-200"
+            >
+              Save Session
             </button>
           </div>
         </div>

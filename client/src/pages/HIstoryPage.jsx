@@ -17,9 +17,10 @@ function formatDuration(seconds = 0) {
 function formatCategory(category) {
   if (category === "daily") return "Daily Journal";
   if (category === "interview") return "Interview";
-  if (category === "defense") return "Defense";
-  if (category === "pageant") return "Pageant";
-  if (category === "impromptu") return "Impromptu";
+  if (category === "defense") return "Project Defense";
+  if (category === "pageant") return "Pageant Q&A";
+  if (category === "impromptu") return "Impromptu Speaking";
+  if (category === "teleprompter") return "Teleprompter";
 
   return category || "None";
 }
@@ -66,7 +67,11 @@ function HistoryPage() {
     const matchesCategory =
       selectedCategory === "all" || session.category === selectedCategory;
 
-    const matchesSearch = (session.prompt || "")
+    const searchableText = `${session.prompt || ""} ${
+      session.scriptText || ""
+    }`;
+
+    const matchesSearch = searchableText
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
 
@@ -100,7 +105,7 @@ function HistoryPage() {
               </h1>
 
               <p className="mt-3 text-slate-600">
-                Track your prompts, categories, and practice duration.
+                Track your prompts, scripts, categories, and practice duration.
               </p>
             </div>
 
@@ -135,7 +140,7 @@ function HistoryPage() {
 
             <div className="rounded-3xl border border-emerald-100 bg-white/70 p-5 shadow-sm">
               <p className="text-sm font-semibold text-slate-500">
-                Longest Session
+                Longest Recording
               </p>
               <p className="mt-2 text-3xl font-bold text-slate-900">
                 {formatDuration(longestSession)}
@@ -163,7 +168,7 @@ function HistoryPage() {
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search prompts..."
+                placeholder="Search prompts or scripts..."
                 className="w-full rounded-2xl border border-emerald-100 bg-white/70 px-11 py-3 text-slate-700 outline-none transition focus:border-emerald-400"
               />
             </div>
@@ -176,9 +181,10 @@ function HistoryPage() {
               <option value="all">All Categories</option>
               <option value="daily">Daily Journal</option>
               <option value="interview">Interview</option>
-              <option value="defense">Defense</option>
-              <option value="pageant">Pageant</option>
-              <option value="impromptu">Impromptu</option>
+              <option value="defense">Project Defense</option>
+              <option value="pageant">Pageant Q&A</option>
+              <option value="impromptu">Impromptu Speaking</option>
+              <option value="teleprompter">Teleprompter</option>
             </select>
           </div>
 
@@ -190,7 +196,8 @@ function HistoryPage() {
                 </h2>
 
                 <p className="mt-2 text-slate-600">
-                  Complete a practice recording to see it here.
+                  Complete a practice recording or save a teleprompter session
+                  to see it here.
                 </p>
               </div>
             ) : filteredSessions.length === 0 ? (
@@ -211,6 +218,20 @@ function HistoryPage() {
                 >
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div>
+                      <div className="mb-3">
+                        <span
+                          className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                            session.type === "teleprompter"
+                              ? "bg-blue-100 text-blue-700"
+                              : "bg-emerald-100 text-emerald-700"
+                          }`}
+                        >
+                          {session.type === "teleprompter"
+                            ? "Teleprompter"
+                            : "Practice Session"}
+                        </span>
+                      </div>
+
                       <p className="text-sm font-semibold uppercase tracking-wider text-emerald-700">
                         {formatCategory(session.category)}
                       </p>
@@ -219,14 +240,28 @@ function HistoryPage() {
                         {session.prompt}
                       </h2>
 
+                      {session.type === "teleprompter" &&
+                        session.scriptText && (
+                          <p className="mt-3 line-clamp-3 text-slate-600">
+                            {session.scriptText}
+                          </p>
+                        )}
+
                       <div className="mt-4 flex flex-wrap gap-3 text-sm text-slate-500">
                         <span>
                           {new Date(session.createdAt).toLocaleString()}
                         </span>
 
-                        <span>
-                          Duration: {formatDuration(session.durationSeconds)}
-                        </span>
+                        {session.type === "teleprompter" ? (
+                          <span>
+                            Pace: {session.wordsPerMinute} WPM
+                          </span>
+                        ) : (
+                          <span>
+                            Duration:{" "}
+                            {formatDuration(session.durationSeconds)}
+                          </span>
+                        )}
                       </div>
                     </div>
 
