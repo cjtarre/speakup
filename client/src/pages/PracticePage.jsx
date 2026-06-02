@@ -1,14 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import {
-  Sparkles,
-  MessageSquareQuote,
-  ChevronDown,
-  ArrowLeft
-} from "lucide-react";
+import { Sparkles, MessageSquareQuote, ChevronDown, ArrowLeft } from "lucide-react";
 
 import { prompts } from "../data/prompts";
 import Recorder from "../components/practice/Recorder";
+import { saveSession } from "../utils/sessionStorage";
 
 function PracticePage() {
     const [category, setCategory] = useState("daily");
@@ -17,13 +13,20 @@ function PracticePage() {
 
     function generatePrompt() {
         const categoryPrompts = prompts[category];
-
-        const randomPrompt =
-        categoryPrompts[
-            Math.floor(Math.random() * categoryPrompts.length)
-        ];
+        const randomPrompt = categoryPrompts[Math.floor(Math.random() * categoryPrompts.length)];
 
         setCurrentPrompt(randomPrompt);
+    }
+
+    function handleRecordingComplete(recordingData) {
+    if (!currentPrompt) return;
+
+    saveSession({
+        type: "prompt-practice",
+        category,
+        prompt: currentPrompt,
+        durationSeconds: recordingData.durationSeconds,
+    });
     }
 
     return (
@@ -33,8 +36,7 @@ function PracticePage() {
             <div className="mb-6 flex justify-end">
                 <button onClick={() => navigate("/")}
                 className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-white/70 px-4 py-1 font-semibold text-emerald-700 shadow-sm transition hover:bg-emerald-50">
-                <ArrowLeft size={16} />
-                Back
+                <ArrowLeft size={16} />Back
                 </button>
             </div>
 
@@ -111,7 +113,7 @@ function PracticePage() {
             </div>
 
         </div>
-        <Recorder />
+        <Recorder onRecordingComplete={handleRecordingComplete} />
       </div>
   );
 }

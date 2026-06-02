@@ -24,6 +24,13 @@ function Navbar() {
             How It Works
           </a>
 
+          <Link
+            to="/history"
+            className="hover:text-emerald-700"
+          >
+            History
+          </Link>
+
           <div className="hidden items-center gap-4 md:flex">
             <Link
               to="/teleprompter"

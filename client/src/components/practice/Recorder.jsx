@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Mic, Square, RotateCcw, PlayCircle } from "lucide-react";
 
-function Recorder() {
+function Recorder({ onRecordingComplete }) {
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
 
@@ -49,6 +49,13 @@ function Recorder() {
         const url = URL.createObjectURL(audioBlob);
         setAudioUrl(url);
         setStatus("Recording complete");
+
+        if (onRecordingComplete) {
+          onRecordingComplete({
+            durationSeconds: seconds,
+            audioUrl: url,
+          });
+        }
 
         stream.getTracks().forEach((track) => track.stop());
       };

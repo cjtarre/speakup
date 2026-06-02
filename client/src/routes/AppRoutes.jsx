@@ -5,6 +5,7 @@ import PracticePage from "../pages/PracticePage";
 import LoginPage from "../pages/LoginPage";
 import DashboardPage from "../pages/DashboardPage";
 import TeleprompterPage from "../pages/TeleprompterPage";
+import HistoryPage from "../pages/HistoryPage";
 
 function AppRoutes() {
   return (
@@ -14,6 +15,7 @@ function AppRoutes() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/teleprompter" element={<TeleprompterPage />} />
+      <Route path="/history" element={<HistoryPage />} />
     </Routes>
   );
 }
