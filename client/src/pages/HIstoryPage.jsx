@@ -3,14 +3,34 @@ import { Trash2 } from "lucide-react";
 
 import { getSessions, deleteSession, clearSessions, } from "../utils/sessionStorage";
 
-function formatDuration(seconds) {
+function formatDuration(seconds = 0) {
   const minutes = Math.floor(seconds / 60);
   const secs = String(seconds % 60).padStart(2, "0");
   return `${minutes}:${secs}`;
 }
 
+function getTotalPracticeTime(sessions) {
+  return sessions.reduce((total, session) => total + (session.durationSeconds || 0), 0);
+}
+
+function getLongestSession(sessions) {
+  if (sessions.length === 0) return 0;
+  return Math.max(...sessions.map((session) => session.durationSeconds || 0));
+}
+
+function getFavoriteCategory(sessions) {
+  if (sessions.length === 0) return "None";
+  const counts = {};
+
+  sessions.forEach((session) => {counts[session.category] = (counts[session.category] || 0) + 1;});
+  return Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b );
+}
+
 function HistoryPage() {
   const [sessions, setSessions] = useState(() => getSessions());
+  const totalPracticeTime = getTotalPracticeTime(sessions);
+  const longestSession = getLongestSession(sessions);
+  const favoriteCategory = getFavoriteCategory(sessions);
 
   function handleDelete(sessionId) {deleteSession(sessionId);setSessions(getSessions());}
   function handleClearAll() {clearSessions(); setSessions([]);}
@@ -21,17 +41,9 @@ function HistoryPage() {
         <div className="rounded-3xl border border-white/70 bg-white/60 p-8 shadow-xl shadow-emerald-900/5 backdrop-blur-xl">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-wider text-emerald-700">
-                Session History
-              </p>
-
-              <h1 className="mt-2 text-3xl font-bold text-slate-900 md:text-4xl">
-                Review your practice sessions.
-              </h1>
-
-              <p className="mt-3 text-slate-600">
-                Track your prompts, categories, and practice duration.
-              </p>
+              <p className="text-sm font-semibold uppercase tracking-wider text-emerald-700">Session History</p>
+              <h1 className="mt-2 text-3xl font-bold text-slate-900 md:text-4xl">Review your practice sessions.</h1>
+              <p className="mt-3 text-slate-600">Track your prompts, categories, and practice duration.</p>
             </div>
 
             {sessions.length > 0 && (
@@ -40,6 +52,46 @@ function HistoryPage() {
               >Clear All</button>
             )}
           </div>
+
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="rounded-3xl border border-emerald-100 bg-white/70 p-5 shadow-sm">
+                <p className="text-sm font-semibold text-slate-500">Total Sessions</p>
+                <p className="mt-2 text-3xl font-bold text-slate-900">
+                  {sessions.length}
+                </p>
+              </div>
+
+              <div className="rounded-3xl border border-emerald-100 bg-white/70 p-5 shadow-sm">
+                <p className="text-sm font-semibold text-slate-500">Practice Time</p>
+                <p className="mt-2 text-3xl font-bold text-slate-900">
+                  {formatDuration(totalPracticeTime)}
+                </p>
+              </div>
+
+              <div className="rounded-3xl border border-emerald-100 bg-white/70 p-5 shadow-sm">
+                <p className="text-sm font-semibold text-slate-500">Longest Session</p>
+                <p className="mt-2 text-3xl font-bold text-slate-900">
+                  {formatDuration(longestSession)}
+                </p>
+              </div>
+
+              <div className="rounded-3xl border border-emerald-100 bg-white/70 p-5 shadow-sm">
+                <p className="text-sm font-semibold text-slate-500">Favorite Category</p>
+                <p className="mt-2 text-2xl font-bold capitalize text-slate-900">
+                  {favoriteCategory === "daily"
+                    ? "Daily Journal"
+                    : favoriteCategory === "interview"
+                    ? "Interview"
+                    : favoriteCategory === "defense"
+                    ? "Defense"
+                    : favoriteCategory === "pageant"
+                    ? "Pageant"
+                    : favoriteCategory === "impromptu"
+                    ? "Impromptu"
+                    : favoriteCategory}
+                </p>
+              </div>
+            </div>
 
           <div className="mt-8 space-y-4">
             {sessions.length === 0 ? (
